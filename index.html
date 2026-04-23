@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SberHealth - Perfect & Stable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sber-green: #21A038;
+            --sber-dark-green: #19802B;
+            --sber-light-green: #E2F5E9;
+            --sber-gradient-bg: linear-gradient(180deg, #B1F0C9 0%, #D8F5E3 15%, #F4F6F8 35%, #F4F6F8 100%);
+            --sber-gradient-primary: linear-gradient(135deg, #10B981, #059669);
+            
+            --bg-main: #F4F6F8;
+            --bg-card: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --shadow-soft: 0 8px 24px rgba(0,0,0,0.05);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background-color: var(--bg-main); 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .app-container { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+        }
+
+        .screen {
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: var(--bg-main); 
+            display: flex; 
+            flex-direction: column;
+            padding-top: env(safe-area-inset-top); 
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            transform: translateX(100%); 
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 10; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+        }
+
+        .screen.active { transform: translateX(0); z-index: 20; }
+        .screen.previous { transform: translateX(-30%); z-index: 10; }
+
+        /* --- ГЛАВНЫЙ ЭКРАН --- */
+        #screen-home { background: var(--sber-gradient-bg); }
+
+        .sber-top-bar { 
+            padding: 15px 20px 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 15px; 
+            position: relative; 
+            z-index: 5; 
+        }
+        
+        .sber-avatar { 
+            width: 38px; height: 38px; background: rgba(0,0,0,0.06); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; 
+        }
+        
+        .sber-search { 
+            flex-grow: 1; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); 
+            padding: 10px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; 
+            color: rgba(0,0,0,0.4); font-size: 15px; font-weight: 500; 
+        }
+        
+        .sber-bell { 
+            width: 38px; height: 38px; display: flex; justify-content: center; align-items: center; 
+            font-size: 22px; flex-shrink: 0; position: relative; 
+        }
+        
+        .notification-dot { 
+            position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; 
+            background: #FF3B30; border-radius: 50%; border: 2px solid #CBF3D8; 
+        }
+
+        .stories-container { 
+            display: flex; gap: 14px; padding: 15px 20px; margin-top: 5px; 
+            overflow-x: auto; scrollbar-width: none; margin-bottom: 5px; position: relative; z-index: 10; 
+        }
+        .stories-container::-webkit-scrollbar { display: none; }
+        
+        .story-item { display: flex; flex-direction: column; align-items: center; width: 66px; flex-shrink: 0; }
+        
+        .story-circle { 
+            width: 60px; height: 60px; min-width: 60px; min-height: 60px; 
+            border-radius: 50%; background: var(--bg-card); display: flex; justify-content: center; align-items: center; 
+            font-size: 28px; box-shadow: var(--shadow-soft); flex-shrink: 0; margin-bottom: 6px; 
+        }
+        
+        .story-text { font-size: 11px; font-weight: 600; text-align: center; color: var(--text-main); white-space: nowrap; }
+
+        .greeting { font-size: 22px; font-weight: 800; color: var(--text-main); margin: 10px 20px 5px; letter-spacing: -0.3px; }
+        
+        .ai-banner { 
+            margin: 15px 20px; background: var(--bg-card); border-radius: 24px; padding: 22px; 
+            position: relative; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; 
+            transform: scale(1); transition: transform 0.2s; 
+        }
+        .ai-banner:active { transform: scale(0.98); }
+        .ai-banner-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .ai-banner-icon-small { 
+            width: 32px; height: 32px; background: var(--sber-gradient-primary); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; color: white; font-size: 16px; font-weight: bold; 
+        }
+        .ai-banner h3 { font-size: 17px; font-weight: 800; color: var(--text-main); }
+        .ai-banner p { font-size: 14px; color: var(--text-muted); line-height: 1.45; max-width: 85%; font-weight: 500; }
+        .ai-banner-arrow { 
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; 
+            background: var(--sber-light-green); color: var(--sber-green); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-weight: bold; 
+        }
+
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 20px 20px; }
+        
+        .health-card { 
+            background: var(--bg-card); padding: 18px; border-radius: 22px; box-shadow: var(--shadow-soft); 
+            display: flex; flex-direction: column; justify-content: space-between; min-height: 120px;
+        }
+        .health-card-icon { 
+            width: 34px; height: 34px; background: #F4F6F8; border-radius: 10px; 
+            display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; 
+        }
+        .health-card-title { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .health-card-val { font-size: 16px; font-weight: 800; color: var(--text-main); margin-top: 4px; }
+        .sber-prime-badge { color: var(--sber-green); font-size: 11px; font-weight: 600; margin-top: 5px; }
+
+        .section-title { font-size: 19px; font-weight: 800; margin: 10px 20px 15px; }
+        .rec-item { 
+            background: var(--bg-card); border-radius: 22px; padding: 16px; display: flex; 
+            align-items: center; gap: 16px; box-shadow: var(--shadow-soft); margin: 0 20px 12px; 
+        }
+        .rec-icon { 
+            width: 48px; height: 48px; background: #E8F0FE; border-radius: 14px; 
+            display: flex; justify-content: center; align-items: center; font-size: 22px; flex-shrink: 0; 
+        }
+
+        /* --- ЧАТ (Исправленный, видимый текст и правильный отступ) --- */
+        #screen-chat { background: #F4F6F8; }
+        
+        .chat-nav { 
+            position: sticky; top: 0; background: rgba(255,255,255,0.85); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 15px 20px; display: flex; align-items: center; z-index: 30; 
+            border-bottom: 1px solid rgba(0,0,0,0.05); 
+        }
+        .back-btn { font-size: 24px; margin-right: 15px; color: var(--text-main); cursor: pointer; font-weight: 500; }
+        
+        .chat-container { 
+            padding: 20px; 
+            padding-bottom: 130px; /* Железобетонный отступ внизу, чтобы ничего не пряталось */
+            display: flex; flex-direction: column; gap: 15px; flex-grow: 1; 
+            background: linear-gradient(180deg, rgba(226, 245, 233, 0.4) 0%, rgba(244, 246, 248, 0) 30%); 
+        }
+        
+        .msg { 
+            max-width: 85%; padding: 14px 16px; border-radius: 20px; font-size: 15px; line-height: 1.45; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            animation: fadeInMsg 0.4s ease-out forwards; /* Исправленная анимация */
+        }
+        
+        .msg.eva { background: var(--bg-card); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.02); }
+        .msg.user { background: var(--sber-green); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+        
+        /* Полные ключевые кадры, чтобы Safari не тупил */
+        @keyframes fadeInMsg { 
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .typing-indicator { 
+            display: none; background: var(--bg-card); padding: 14px 20px; border-radius: 20px; 
+            border-bottom-left-radius: 4px; width: fit-content; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 10px; 
+        }
+        .dot { 
+            width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; 
+            display: inline-block; margin: 0 2px; animation: typeBounce 1.4s infinite ease-in-out both; 
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typeBounce { 
+            0%, 80%, 100% { transform: scale(0); } 
+            40% { transform: scale(1); } 
+        }
+
+        .chat-input-area { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); 
+            background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; z-index: 30; 
+        }
+        
+        .fake-input { 
+            flex-grow: 1; background: var(--bg-main); padding: 12px 15px; border-radius: 20px; 
+            color: var(--text-muted); font-size: 15px; min-height: 44px; display: flex; align-items: center; 
+            white-space: pre-wrap; word-break: break-word; 
+        }
+        
+        .send-btn { 
+            width: 40px; height: 40px; background: var(--sber-green); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; flex-shrink: 0; 
+        }
+
+        /* --- АГРЕГАЦИЯ --- */
+        #screen-process { background: var(--bg-card); }
+        .spinner-core { 
+            width: 100px; height: 100px; border-radius: 50%; background: var(--sber-light-green); 
+            display: flex; justify-content: center; align-items: center; position: relative; box-shadow: 0 0 30px rgba(33, 160, 56, 0.2); 
+        }
+        .spinner-core::before { 
+            content: ''; position: absolute; width: 140%; height: 140%; border: 2px dashed var(--sber-green); 
+            border-radius: 50%; animation: spin 8s linear infinite; 
+        }
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .ai-logo { font-size: 36px; font-weight: bold; color: var(--sber-green); }
+        .log-box { margin-top: 40px; width: 80%; }
+        .log-item { 
+            font-size: 15px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; 
+            gap: 12px; opacity: 0; transform: translateY(10px); transition: all 0.5s; font-weight: 500;
+        }
+        .log-item.visible { opacity: 1; transform: translateY(0); }
+        .check { color: var(--sber-green); font-weight: bold; font-size: 18px;}
+
+        /* --- РЕЗУЛЬТАТЫ --- */
+        #screen-result { background: var(--bg-main); }
+        .res-card { 
+            background: var(--bg-card); margin: 20px; padding: 24px; border-radius: 24px; 
+            box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.5); 
+        }
+        .pill { 
+            display: inline-block; padding: 6px 14px; background: var(--sber-light-green); color: var(--sber-green); 
+            border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 15px; 
+        }
+        .action-btn { 
+            width: calc(100% - 40px); margin: 10px 20px; padding: 18px; background: var(--sber-green); color: white; 
+            border: none; border-radius: 18px; font-size: 16px; font-weight: 600; cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(33, 160, 56, 0.2); transition: all 0.2s; 
+        }
+        .action-btn:active { transform: scale(0.98); }
+
+        /* --- BOTTOM TAB BAR --- */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(65px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around;
+            padding-bottom: env(safe-area-inset-bottom); z-index: 100; transition: transform 0.3s;
+        }
+        .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 65px; color: var(--text-muted); gap: 4px; }
+        .tab-item.active { color: var(--sber-green); }
+        .tab-icon { font-size: 22px; }
+        .tab-label { font-size: 10px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div id="screen-home" class="screen active" style="padding-bottom: 0;">
+        <div class="sber-top-bar">
+            <div class="sber-avatar">👤</div>
+            <div class="sber-search">🔍 Поиск врача или лекарства</div>
+            <div class="sber-bell">🔔<div class="notification-dot"></div></div>
+        </div>
+
+        <div class="stories-container">
+            <div class="story-item"><div class="story-circle">💊</div><div class="story-text">Витамины</div></div>
+            <div class="story-item"><div class="story-circle">🛡️</div><div class="story-text">ОМС</div></div>
+            <div class="story-item"><div class="story-circle">🏃</div><div class="story-text">Чек-ап</div></div>
+            <div class="story-item"><div class="story-circle">💚</div><div class="story-text">СберПрайм</div></div>
+        </div>
+
+        <div class="greeting">В здоровье, Анастасия</div>
+
+        <div class="ai-banner" onclick="openChat()">
+            <div class="ai-banner-header">
+                <div class="ai-banner-icon-small">Е</div>
+                <h3>Ева • ИИ-Ассистент</h3>
+            </div>
+            <p>Чувствуете недомогание? Я помогу определить причину и быстро подберу лечение.</p>
+            <div class="ai-banner-arrow">→</div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="health-card">
+                <div class="health-card-icon">🪪</div>
+                <div><div class="health-card-title">Полис ОМС</div><div class="health-card-val">Активен</div></div>
+            </div>
+            <div class="health-card">
+                <div class="health-card-icon">📅</div>
+                <div><div class="health-card-title">Ближайшая запись</div><div class="health-card-val" style="font-weight: 600;">Нет активных</div></div>
+            </div>
+            <div class="health-card">
+                <div class="health-card-icon" style="background: var(--sber-light-green); color: var(--sber-green);">🧪</div>
+                <div><div class="health-card-title">Сдача анализов</div><div class="health-card-val">Скидка 25%</div><div class="sber-prime-badge">со СберПрайм</div></div>
+            </div>
+            <div class="health-card">
+                <div class="health-card-icon">🏥</div>
+                <div><div class="health-card-title">Моя клиника</div><div class="health-card-val">Прикреплено</div></div>
+            </div>
+        </div>
+
+        <div class="section-title">Сервисы для жизни</div>
+        <div class="rec-item"><div class="rec-icon">🩺</div><div><div style="font-weight: 700; font-size: 16px;">Онлайн-консультация</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 500;">Дежурный врач 24/7</div></div></div>
+        <div class="rec-item"><div class="rec-icon" style="background: #EAF6ED;">📦</div><div><div style="font-weight: 700; font-size: 16px;">ЕАПТЕКА</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 500;">Доставка от 1 часа</div></div></div>
+        <div style="height: 100px;"></div>
+    </div>
+
+    <div id="screen-chat" class="screen" style="padding-bottom: 0;">
+        <div class="chat-nav">
+            <div class="back-btn" onclick="goHome()">←</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; background: var(--sber-gradient-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">Е</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 16px; color: var(--text-main);">Доктор Ева</div>
+                    <div style="font-size: 12px; color: var(--sber-green); font-weight: 600;">Бот-ассистент СберЗдоровья</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chat-box">
+            <div class="msg eva">Здравствуйте, Анастасия! Я ваш медицинский ИИ-ассистент. Опишите, что вас беспокоит?</div>
+        </div>
+
+        <div class="typing-indicator" id="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+
+        <div class="chat-input-area" id="input-area">
+            <div class="fake-input" id="fake-input-text">Сообщение...</div>
+            <div class="send-btn" onclick="handleUserMessage()">↑</div>
+        </div>
+    </div>
+
+    <div id="screen-process" class="screen">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 0 20px;">
+            <div class="spinner-core"><div class="ai-logo">Е</div></div>
+            <div style="margin-top: 35px; font-size: 22px; font-weight: 800; color: var(--text-main);">Анализ данных...</div>
+            <div class="log-box">
+                <div class="log-item" id="log1"><span class="check">✓</span> Подключение к ЕМИАС</div>
+                <div class="log-item" id="log2"><span class="check">✓</span> Анализ электронной медкарты</div>
+                <div class="log-item" id="log3"><span class="check">✓</span> Синтез симптомов</div>
+                <div class="log-item" id="log4" style="color: var(--sber-green); font-weight: 700;"><span class="check">●</span> Формирование диагноза</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <div class="chat-nav"><div class="back-btn" onclick="goHome()">✕</div><div style="font-weight: 700; font-size: 17px;">Заключение ИИ</div></div>
+        <div class="res-card">
+            <div class="pill">Высокая вероятность</div>
+            <div style="font-size: 24px; font-weight: 800; margin-bottom: 12px; color: var(--text-main); letter-spacing: -0.5px;">Острая вирусная инфекция (ОРВИ)</div>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 500;">На основе совпадения симптомов с базой данных клиник и вашей истории болезней.</p>
+        </div>
+        <div class="res-card">
+            <div style="font-weight: 800; font-size: 18px; margin-bottom: 20px;">План действий</div>
+            <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                <div style="font-size: 24px;">💊</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">Жаропонижающие (Аптека)</div>
+                    <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Сбить температуру выше 38.5.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <div style="font-size: 24px;">🩸</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;">Сдать анализы (ОАК)</div>
+                    <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Исключить бактериальную инфекцию.</div>
+                </div>
+            </div>
+        </div>
+        <button class="action-btn" onclick="alert('Переход в ЕАптеку')">Заказать лекарства (ЕАПТЕКА)</button>
+        <button class="action-btn" style="background: var(--sber-light-green); color: var(--sber-green); margin-top: 0; box-shadow: none;">Сдать анализы рядом (Карта)</button>
+    </div>
+
+    <div class="tab-bar" id="bottom-tabs">
+        <div class="tab-item active"><div class="tab-icon">🏠</div><div class="tab-label">Главный</div></div>
+        <div class="tab-item"><div class="tab-icon">📊</div><div class="tab-label">Медкарта</div></div>
+        <div class="tab-item"><div class="tab-icon" style="font-size: 26px; color: #FFD700; transform: translateY(-2px);">⭐</div><div class="tab-label" style="color: var(--text-main);">Сервисы</div></div>
+        <div class="tab-item"><div class="tab-icon">💬</div><div class="tab-label">Чат</div></div>
+        <div class="tab-item"><div class="tab-icon">🕒</div><div class="tab-label">История</div></div>
+    </div>
+</div>
+
+<script>
+    function openChat() { 
+        document.getElementById('screen-home').classList.add('previous'); 
+        document.getElementById('screen-chat').classList.add('active'); 
+        document.getElementById('bottom-tabs').style.transform = 'translateY(100%)'; 
+    }
+    
+    function goHome() { 
+        document.querySelectorAll('.screen').forEach(s => { 
+            s.classList.remove('active'); 
+            s.classList.remove('previous'); 
+        }); 
+        document.getElementById('screen-home').classList.add('active'); 
+        document.getElementById('bottom-tabs').style.transform = 'translateY(0)'; 
+    }
+
+    let chatStep = 0;
+    let isTyping = false;
+
+    function addMessage(text, sender, isHtml = false) {
+        const chatBox = document.getElementById('chat-box');
+        const msg = document.createElement('div');
+        msg.className = `msg ${sender}`;
+        
+        if (isHtml) {
+            msg.innerHTML = text; 
+        } else {
+            msg.textContent = text; 
+        }
+        
+        chatBox.appendChild(msg); 
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showEvaTyping(delay, callback) {
+        const typing = document.getElementById('typing'); 
+        typing.style.display = 'block';
+        
+        const chatBox = document.getElementById('chat-box');
+        chatBox.appendChild(typing); 
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        setTimeout(() => { 
+            typing.style.display = 'none'; 
+            callback(); 
+        }, delay);
+    }
+
+    function handleUserMessage() {
+        const input = document.getElementById('fake-input-text');
+        if (isTyping || input.textContent !== "Сообщение...") return; 
+        
+        let text = chatStep === 0 
+            ? "У меня температура 38 и сильная слабость, очень плохо себя чувствую." 
+            : "Со вчерашнего вечера. Горло немного першит, кашля нет.";
+            
+        isTyping = true; 
+        input.textContent = ""; 
+        input.style.color = "var(--text-main)";
+        
+        let i = 0;
+        const typeWriter = setInterval(() => {
+            input.textContent += text.charAt(i); 
+            i++;
+            
+            if (i >= text.length) {
+                clearInterval(typeWriter);
+                
+                setTimeout(() => {
+                    input.textContent = "Сообщение..."; 
+                    input.style.color = "var(--text-muted)"; 
+                    
+                    addMessage(text, 'user');
+                    
+                    if (chatStep === 0) {
+                        showEvaTyping(2000, () => { 
+                            addMessage("Поняла вас. Как давно у вас держится такая температура? Есть ли кашель или боль в горле?", 'eva'); 
+                            chatStep = 1; 
+                            isTyping = false; 
+                        });
+                    } else {
+                        showEvaTyping(2500, () => {
+                            const btnHtml = "Спасибо за уточнение. Чтобы сформировать максимально точный предварительный диагноз, мне нужно сопоставить эти симптомы с вашей историей болезней.<br><br><button onclick='startAggregation()' style='background:var(--sber-green);color:white;border:none;padding:14px 15px;border-radius:14px;margin-top:12px;font-weight:700;width:100%;cursor:pointer;font-size:15px;'>Разрешить сбор данных</button>";
+                            addMessage(btnHtml, 'eva', true);
+                            chatStep = 2; 
+                            isTyping = false; 
+                            document.getElementById('input-area').style.opacity = '0.3'; 
+                            document.getElementById('input-area').style.pointerEvents = 'none';
+                        });
+                    }
+                }, 500);
+            }
+        }, 40); 
+    }
+
+    function startAggregation() {
+        document.getElementById('screen-chat').classList.add('previous'); 
+        document.getElementById('screen-process').classList.add('active');
+        
+        setTimeout(() => document.getElementById('log1').classList.add('visible'), 800);
+        setTimeout(() => document.getElementById('log2').classList.add('visible'), 2000);
+        setTimeout(() => document.getElementById('log3').classList.add('visible'), 3200);
+        setTimeout(() => document.getElementById('log4').classList.add('visible'), 4500);
+        
+        setTimeout(() => { 
+            document.getElementById('screen-process').classList.remove('active'); 
+            document.getElementById('screen-result').classList.add('active'); 
+        }, 6000);
+    }
+</script>
+</body>
+</html>
