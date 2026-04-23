@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SberHealth - iPhone Fit Design</title>
+    <title>SberHealth - iPhone Fit</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,264 +18,134 @@
             --text-main: #111827;
             --text-muted: #6B7280;
             --border-color: #E5E7EB;
-            --shadow-soft: 0 6px 16px rgba(0,0,0,0.04);
+            --shadow-soft: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        body { 
-            background-color: var(--bg-main); 
-            height: 100vh; 
-            width: 100vw; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-        }
+        body { background-color: var(--bg-main); height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; }
 
-        .app-container { 
-            position: relative; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-        }
+        .app-container { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
         .screen {
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: var(--bg-main); 
-            display: flex; 
-            flex-direction: column;
-            padding-top: env(safe-area-inset-top); 
-            padding-bottom: calc(75px + env(safe-area-inset-bottom)); /* Чуть уменьшил нижний паддинг контейнера */
-            transform: translateX(100%); 
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            z-index: 10; 
-            overflow-y: auto; 
-            overflow-x: hidden;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-main); display: flex; flex-direction: column;
+            padding-top: env(safe-area-inset-top); padding-bottom: calc(70px + env(safe-area-inset-bottom));
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 10; overflow-y: auto; overflow-x: hidden;
         }
 
         .screen.active { transform: translateX(0); z-index: 20; }
         .screen.previous { transform: translateX(-30%); z-index: 10; }
 
-        /* --- ГЛАВНЫЙ ЭКРАН --- */
+        /* --- ГЛАВНЫЙ ЭКРАН (Максимально сжато для iPhone) --- */
         #screen-home { background: var(--sber-gradient-bg); }
 
         .sber-top-bar { 
-            padding: 5px 20px 5px; /* Ужали шапку */
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            gap: 12px; 
-            position: relative; 
-            z-index: 5; 
+            padding: 5px 20px 0; /* Минимальный отступ сверху */
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; position: relative; z-index: 5; 
         }
-        
-        .sber-avatar { 
-            width: 34px; height: 34px; background: rgba(0,0,0,0.06); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; font-size: 16px; flex-shrink: 0; 
-        }
-        
-        .sber-search { 
-            flex-grow: 1; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); 
-            padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; 
-            color: rgba(0,0,0,0.5); font-size: 14px; font-weight: 500; 
-        }
-        
-        .sber-bell { 
-            width: 34px; height: 34px; display: flex; justify-content: center; align-items: center; 
-            font-size: 20px; flex-shrink: 0; position: relative; 
-        }
-        
-        .notification-dot { 
-            position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; 
-            background: #FF3B30; border-radius: 50%; border: 2px solid #CBF3D8; 
-        }
+        .sber-avatar { width: 32px; height: 32px; background: rgba(0,0,0,0.06); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 15px; flex-shrink: 0; }
+        .sber-search { flex-grow: 1; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 8px 12px; border-radius: 16px; display: flex; align-items: center; gap: 6px; color: rgba(0,0,0,0.5); font-size: 13px; font-weight: 500; }
+        .sber-bell { width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; position: relative; }
+        .notification-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: #FF3B30; border-radius: 50%; border: 2px solid #CBF3D8; }
 
         .stories-container { 
-            display: flex; gap: 12px; padding: 10px 20px; margin-top: 0; 
+            display: flex; gap: 10px; 
+            padding: 10px 20px 10px; /* Спасает от обрезки в iOS Safari */
             overflow-x: auto; scrollbar-width: none; margin-bottom: 0; position: relative; z-index: 10; 
         }
         .stories-container::-webkit-scrollbar { display: none; }
-        
-        .story-item { display: flex; flex-direction: column; align-items: center; width: 60px; flex-shrink: 0; }
-        
+        .story-item { display: flex; flex-direction: column; align-items: center; width: 56px; flex-shrink: 0; }
         .story-circle { 
-            width: 54px; height: 54px; min-width: 54px; min-height: 54px; /* Чуть меньше для экономии места */
+            width: 48px; height: 48px; min-width: 48px; min-height: 48px; /* Уменьшено */
             border-radius: 50%; background: var(--bg-card); display: flex; justify-content: center; align-items: center; 
-            font-size: 24px; box-shadow: var(--shadow-soft); flex-shrink: 0; margin-bottom: 4px; 
+            font-size: 22px; box-shadow: var(--shadow-soft); flex-shrink: 0; margin-bottom: 4px; 
         }
-        
         .story-text { font-size: 10px; font-weight: 600; text-align: center; color: var(--text-main); white-space: nowrap; }
 
-        .greeting { font-size: 20px; font-weight: 800; color: var(--text-main); margin: 5px 20px 5px; letter-spacing: -0.3px; }
+        .greeting { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0 20px 5px; letter-spacing: -0.3px; }
         
         .ai-banner { 
-            margin: 10px 20px; background: var(--bg-card); border-radius: 22px; padding: 16px 20px; /* Ужали баннер */
-            position: relative; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; 
-            transform: scale(1); transition: transform 0.2s; 
+            margin: 5px 20px; background: var(--bg-card); border-radius: 20px; padding: 14px 18px; 
+            position: relative; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; transform: scale(1); transition: transform 0.2s; 
         }
         .ai-banner:active { transform: scale(0.98); }
-        .ai-banner-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .ai-banner-icon-small { 
-            width: 28px; height: 28px; background: var(--sber-gradient-primary); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; color: white; font-size: 14px; font-weight: bold; 
-        }
-        .ai-banner h3 { font-size: 16px; font-weight: 800; color: var(--text-main); }
-        .ai-banner p { font-size: 13px; color: var(--text-muted); line-height: 1.4; max-width: 85%; font-weight: 500; }
-        .ai-banner-arrow { 
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; 
-            background: var(--sber-light-green); color: var(--sber-green); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px;
-        }
+        .ai-banner-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .ai-banner-icon-small { width: 26px; height: 26px; background: var(--sber-gradient-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 13px; font-weight: bold; }
+        .ai-banner h3 { font-size: 15px; font-weight: 800; color: var(--text-main); }
+        .ai-banner p { font-size: 12px; color: var(--text-muted); line-height: 1.35; max-width: 85%; font-weight: 500; }
+        .ai-banner-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: var(--sber-light-green); color: var(--sber-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px;}
 
-        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 10px; } /* Ужали сетку */
-        
-        .health-card { 
-            background: var(--bg-card); padding: 14px; border-radius: 20px; box-shadow: var(--shadow-soft); 
-            display: flex; flex-direction: column; justify-content: space-between; min-height: 105px;
-        }
-        .health-card-icon { 
-            width: 30px; height: 30px; background: #F4F6F8; border-radius: 8px; 
-            display: flex; justify-content: center; align-items: center; font-size: 16px; flex-shrink: 0; 
-        }
-        .health-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 5px 20px 10px; }
+        .health-card { background: var(--bg-card); padding: 12px; border-radius: 18px; box-shadow: var(--shadow-soft); display: flex; flex-direction: column; justify-content: space-between; min-height: 90px;}
+        .health-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .health-card-icon { width: 28px; height: 28px; background: #F4F6F8; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 14px; flex-shrink: 0; }
         .health-card-title { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-        .health-card-val { font-size: 15px; font-weight: 800; color: var(--text-main); margin-top: 3px; }
-        .sber-prime-badge { color: var(--sber-green); font-size: 10px; font-weight: 600; margin-top: 4px; }
+        .health-card-val { font-size: 14px; font-weight: 800; color: var(--text-main); margin-top: 3px; }
+        .sber-prime-badge { color: var(--sber-green); font-size: 10px; font-weight: 600; margin-top: 3px; }
 
-        .section-title { font-size: 17px; font-weight: 800; margin: 5px 20px 10px; }
-        .rec-item { 
-            background: var(--bg-card); border-radius: 20px; padding: 12px 16px; display: flex; 
-            align-items: center; gap: 14px; box-shadow: var(--shadow-soft); margin: 0 20px 8px; 
-        }
-        .rec-icon { 
-            width: 42px; height: 42px; background: #E8F0FE; border-radius: 12px; 
-            display: flex; justify-content: center; align-items: center; font-size: 20px; flex-shrink: 0; 
-        }
+        .section-title { font-size: 16px; font-weight: 800; margin: 0 20px 8px; }
+        .rec-item { background: var(--bg-card); border-radius: 18px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-soft); margin: 0 20px 8px; }
+        .rec-icon { width: 40px; height: 40px; background: #E8F0FE; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 18px; flex-shrink: 0; }
 
-        /* --- ЧАТ --- */
+        /* --- ЧАТ (Исправлен скролл) --- */
         #screen-chat { background: #F4F6F8; }
-        
-        .chat-nav { 
-            position: sticky; top: 0; background: rgba(255,255,255,0.85); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 15px 20px; display: flex; align-items: center; z-index: 30; 
-            border-bottom: 1px solid rgba(0,0,0,0.05); 
-        }
-        .back-btn { font-size: 24px; margin-right: 15px; color: var(--text-main); cursor: pointer; font-weight: 500; }
+        .chat-nav { position: sticky; top: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 10px 20px; display: flex; align-items: center; z-index: 30; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .back-btn { font-size: 22px; margin-right: 12px; color: var(--text-main); cursor: pointer; font-weight: 500; }
         
         .chat-container { 
-            padding: 20px; 
-            padding-bottom: 130px; 
-            display: flex; flex-direction: column; gap: 15px; flex-grow: 1; 
+            padding: 15px 20px; 
+            padding-bottom: 180px; /* Огромный отступ, чтобы кнопка точно влезла */
+            display: flex; flex-direction: column; gap: 12px; flex-grow: 1; 
             background: linear-gradient(180deg, rgba(226, 245, 233, 0.4) 0%, rgba(244, 246, 248, 0) 30%); 
+            scroll-behavior: smooth; /* Плавный скролл */
         }
         
-        .msg { 
-            max-width: 85%; padding: 14px 16px; border-radius: 20px; font-size: 15px; line-height: 1.45; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
-            animation: fadeInMsg 0.4s ease-out forwards; 
-        }
-        
+        .msg { max-width: 85%; padding: 12px 15px; border-radius: 18px; font-size: 14px; line-height: 1.4; box-shadow: 0 2px 8px rgba(0,0,0,0.03); animation: fadeInMsg 0.4s ease-out forwards; }
         .msg.eva { background: var(--bg-card); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.02); }
         .msg.user { background: var(--sber-green); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
         
-        @keyframes fadeInMsg { 
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInMsg { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
 
-        .typing-indicator { 
-            display: none; background: var(--bg-card); padding: 14px 20px; border-radius: 20px; 
-            border-bottom-left-radius: 4px; width: fit-content; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 10px; 
-        }
-        .dot { 
-            width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; 
-            display: inline-block; margin: 0 2px; animation: typeBounce 1.4s infinite ease-in-out both; 
-        }
+        .typing-indicator { display: none; background: var(--bg-card); padding: 12px 18px; border-radius: 18px; border-bottom-left-radius: 4px; width: fit-content; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 10px; }
+        .dot { width: 5px; height: 5px; background: var(--text-muted); border-radius: 50%; display: inline-block; margin: 0 2px; animation: typeBounce 1.4s infinite ease-in-out both; }
         .dot:nth-child(1) { animation-delay: -0.32s; }
         .dot:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes typeBounce { 
-            0%, 80%, 100% { transform: scale(0); } 
-            40% { transform: scale(1); } 
-        }
+        @keyframes typeBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        .chat-input-area { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); 
-            background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; z-index: 30; 
-        }
-        
-        .fake-input { 
-            flex-grow: 1; background: var(--bg-main); padding: 12px 15px; border-radius: 20px; 
-            color: var(--text-muted); font-size: 15px; min-height: 44px; display: flex; align-items: center; 
-            white-space: pre-wrap; word-break: break-word; 
-        }
-        
-        .send-btn { 
-            width: 40px; height: 40px; background: var(--sber-green); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; flex-shrink: 0; 
-        }
+        .chat-input-area { position: fixed; bottom: 0; left: 0; width: 100%; padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; z-index: 30; }
+        .fake-input { flex-grow: 1; background: var(--bg-main); padding: 10px 15px; border-radius: 20px; color: var(--text-muted); font-size: 14px; min-height: 40px; display: flex; align-items: center; white-space: pre-wrap; word-break: break-word; }
+        .send-btn { width: 36px; height: 36px; background: var(--sber-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; flex-shrink: 0; }
 
         /* --- АГРЕГАЦИЯ --- */
         #screen-process { background: var(--bg-card); }
-        .spinner-core { 
-            width: 100px; height: 100px; border-radius: 50%; background: var(--sber-light-green); 
-            display: flex; justify-content: center; align-items: center; position: relative; box-shadow: 0 0 30px rgba(33, 160, 56, 0.2); 
-        }
-        .spinner-core::before { 
-            content: ''; position: absolute; width: 140%; height: 140%; border: 2px dashed var(--sber-green); 
-            border-radius: 50%; animation: spin 8s linear infinite; 
-        }
-        
+        .spinner-core { width: 90px; height: 90px; border-radius: 50%; background: var(--sber-light-green); display: flex; justify-content: center; align-items: center; position: relative; box-shadow: 0 0 30px rgba(33, 160, 56, 0.2); }
+        .spinner-core::before { content: ''; position: absolute; width: 140%; height: 140%; border: 2px dashed var(--sber-green); border-radius: 50%; animation: spin 8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        .ai-logo { font-size: 36px; font-weight: bold; color: var(--sber-green); }
+        .ai-logo { font-size: 32px; font-weight: bold; color: var(--sber-green); }
         .log-box { margin-top: 40px; width: 80%; }
-        .log-item { 
-            font-size: 15px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; 
-            gap: 12px; opacity: 0; transform: translateY(10px); transition: all 0.5s; font-weight: 500;
-        }
+        .log-item { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(10px); transition: all 0.5s; font-weight: 500;}
         .log-item.visible { opacity: 1; transform: translateY(0); }
-        .check { color: var(--sber-green); font-weight: bold; font-size: 18px;}
+        .check { color: var(--sber-green); font-weight: bold; font-size: 16px;}
 
         /* --- РЕЗУЛЬТАТЫ --- */
         #screen-result { background: var(--bg-main); }
-        .res-card { 
-            background: var(--bg-card); margin: 20px; padding: 20px; border-radius: 22px; 
-            box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.5); 
-        }
-        .pill { 
-            display: inline-block; padding: 6px 12px; background: var(--sber-light-green); color: var(--sber-green); 
-            border-radius: 12px; font-size: 11px; font-weight: 700; margin-bottom: 12px; 
-        }
-        .action-btn { 
-            width: calc(100% - 40px); margin: 10px 20px; padding: 16px; background: var(--sber-green); color: white; 
-            border: none; border-radius: 18px; font-size: 16px; font-weight: 600; cursor: pointer; 
-            box-shadow: 0 10px 20px rgba(33, 160, 56, 0.2); transition: all 0.2s; 
-        }
+        .res-card { background: var(--bg-card); margin: 15px; padding: 20px; border-radius: 20px; box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.5); }
+        .pill { display: inline-block; padding: 6px 12px; background: var(--sber-light-green); color: var(--sber-green); border-radius: 10px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+        .action-btn { width: calc(100% - 30px); margin: 10px 15px; padding: 16px; background: var(--sber-green); color: white; border: none; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 20px rgba(33, 160, 56, 0.2); transition: all 0.2s; }
         .action-btn:active { transform: scale(0.98); }
 
         /* --- BOTTOM TAB BAR --- */
         .tab-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(65px + env(safe-area-inset-bottom));
+            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(60px + env(safe-area-inset-bottom));
             background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around;
             padding-bottom: env(safe-area-inset-bottom); z-index: 100; transition: transform 0.3s;
         }
-        .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 65px; color: var(--text-muted); gap: 4px; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; color: var(--text-muted); gap: 4px; }
         .tab-item.active { color: var(--sber-green); }
-        .tab-icon { font-size: 22px; }
+        .tab-icon { font-size: 20px; }
         .tab-label { font-size: 10px; font-weight: 600; }
     </style>
 </head>
@@ -310,27 +180,19 @@
 
         <div class="cards-grid">
             <div class="health-card">
-                <div class="health-card-header">
-                    <div class="health-card-icon">🪪</div>
-                </div>
+                <div class="health-card-header"><div class="health-card-icon">🪪</div></div>
                 <div><div class="health-card-title">Полис ОМС</div><div class="health-card-val">Активен</div></div>
             </div>
             <div class="health-card">
-                <div class="health-card-header">
-                    <div class="health-card-icon">📅</div>
-                </div>
+                <div class="health-card-header"><div class="health-card-icon">📅</div></div>
                 <div><div class="health-card-title">Ближайшая запись</div><div class="health-card-val" style="font-weight: 600;">Нет активных</div></div>
             </div>
             <div class="health-card">
-                <div class="health-card-header">
-                    <div class="health-card-icon" style="background: var(--sber-light-green); color: var(--sber-green);">🧪</div>
-                </div>
+                <div class="health-card-header"><div class="health-card-icon" style="background: var(--sber-light-green); color: var(--sber-green);">🧪</div></div>
                 <div><div class="health-card-title">Сдача анализов</div><div class="health-card-val">Скидка 25%</div><div class="sber-prime-badge">со СберПрайм</div></div>
             </div>
             <div class="health-card">
-                <div class="health-card-header">
-                    <div class="health-card-icon">🏥</div>
-                </div>
+                <div class="health-card-header"><div class="health-card-icon">🏥</div></div>
                 <div><div class="health-card-title">Моя клиника</div><div class="health-card-val">Прикреплено</div></div>
             </div>
         </div>
@@ -339,35 +201,35 @@
         <div class="rec-item">
             <div class="rec-icon">🩺</div>
             <div>
-                <div style="font-weight: 700; font-size: 15px;">Онлайн-консультация</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 500;">Дежурный врач 24/7</div>
+                <div style="font-weight: 700; font-size: 14px;">Онлайн-консультация</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Дежурный врач 24/7</div>
             </div>
         </div>
         <div class="rec-item">
             <div class="rec-icon" style="background: #EAF6ED;">📦</div>
             <div>
-                <div style="font-weight: 700; font-size: 15px;">ЕАПТЕКА</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px; font-weight: 500;">Доставка от 1 часа</div>
+                <div style="font-weight: 700; font-size: 14px;">ЕАПТЕКА</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Доставка от 1 часа</div>
             </div>
         </div>
-        <div style="height: 100px;"></div>
+        <div style="height: 50px;"></div>
     </div>
 
     <div id="screen-chat" class="screen" style="padding-bottom: 0;">
         <div class="chat-nav">
             <div class="back-btn" onclick="goHome()">←</div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 38px; height: 38px; background: var(--sber-gradient-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 18px;">Е</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; background: var(--sber-gradient-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 15px;">Е</div>
                 <div>
-                    <div style="font-weight: 700; font-size: 16px; color: var(--text-main);">Доктор Ева</div>
-                    <div style="font-size: 12px; color: var(--sber-green); font-weight: 600;">Бот-ассистент СберЗдоровья</div>
+                    <div style="font-weight: 700; font-size: 15px; color: var(--text-main);">Доктор Ева</div>
+                    <div style="font-size: 11px; color: var(--sber-green); font-weight: 600;">Бот-ассистент СберЗдоровья</div>
                 </div>
             </div>
         </div>
         
         <div class="chat-container" id="chat-box">
             <div class="msg eva">Здравствуйте, Анастасия! Я ваш медицинский ИИ-ассистент. Опишите, что вас беспокоит?</div>
-        </div>
+            <div id="chat-anchor"></div> </div>
 
         <div class="typing-indicator" id="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
 
@@ -380,7 +242,7 @@
     <div id="screen-process" class="screen">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 0 20px;">
             <div class="spinner-core"><div class="ai-logo">Е</div></div>
-            <div style="margin-top: 35px; font-size: 22px; font-weight: 800; color: var(--text-main);">Анализ данных...</div>
+            <div style="margin-top: 30px; font-size: 20px; font-weight: 800; color: var(--text-main);">Анализ данных...</div>
             <div class="log-box">
                 <div class="log-item" id="log1"><span class="check">✓</span> Подключение к ЕМИАС</div>
                 <div class="log-item" id="log2"><span class="check">✓</span> Анализ электронной медкарты</div>
@@ -391,23 +253,23 @@
     </div>
 
     <div id="screen-result" class="screen">
-        <div class="chat-nav"><div class="back-btn" onclick="goHome()">✕</div><div style="font-weight: 700; font-size: 17px;">Заключение ИИ</div></div>
+        <div class="chat-nav"><div class="back-btn" onclick="goHome()">✕</div><div style="font-weight: 700; font-size: 16px;">Заключение ИИ</div></div>
         <div class="res-card">
             <div class="pill">Высокая вероятность</div>
-            <div style="font-size: 22px; font-weight: 800; margin-bottom: 10px; color: var(--text-main); letter-spacing: -0.5px;">Острая вирусная инфекция (ОРВИ)</div>
-            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; font-weight: 500;">На основе совпадения симптомов с базой данных клиник и вашей истории болезней.</p>
+            <div style="font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text-main); letter-spacing: -0.5px;">Острая вирусная инфекция (ОРВИ)</div>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.4; font-weight: 500;">На основе совпадения симптомов с базой данных клиник и вашей истории болезней.</p>
         </div>
         <div class="res-card">
-            <div style="font-weight: 800; font-size: 17px; margin-bottom: 16px;">План действий</div>
-            <div style="display: flex; gap: 14px; margin-bottom: 16px;">
-                <div style="font-size: 22px;">💊</div>
+            <div style="font-weight: 800; font-size: 16px; margin-bottom: 14px;">План действий</div>
+            <div style="display: flex; gap: 12px; margin-bottom: 14px;">
+                <div style="font-size: 20px;">💊</div>
                 <div>
                     <div style="font-weight: 700; font-size: 14px;">Жаропонижающие (Аптека)</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Сбить температуру выше 38.5.</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 14px;">
-                <div style="font-size: 22px;">🩸</div>
+            <div style="display: flex; gap: 12px;">
+                <div style="font-size: 20px;">🩸</div>
                 <div>
                     <div style="font-weight: 700; font-size: 14px;">Сдать анализы (ОАК)</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Исключить бактериальную инфекцию.</div>
@@ -421,7 +283,7 @@
     <div class="tab-bar" id="bottom-tabs">
         <div class="tab-item active"><div class="tab-icon">🏠</div><div class="tab-label">Главный</div></div>
         <div class="tab-item"><div class="tab-icon">📊</div><div class="tab-label">Медкарта</div></div>
-        <div class="tab-item"><div class="tab-icon" style="font-size: 26px; color: #FFD700; transform: translateY(-2px);">⭐</div><div class="tab-label" style="color: var(--text-main);">Сервисы</div></div>
+        <div class="tab-item"><div class="tab-icon" style="font-size: 24px; color: #FFD700; transform: translateY(-2px);">⭐</div><div class="tab-label" style="color: var(--text-main);">Сервисы</div></div>
         <div class="tab-item"><div class="tab-icon">💬</div><div class="tab-label">Чат</div></div>
         <div class="tab-item"><div class="tab-icon">🕒</div><div class="tab-label">История</div></div>
     </div>
@@ -446,19 +308,25 @@
     let chatStep = 0;
     let isTyping = false;
 
+    // Умный скролл вниз
+    function scrollChatToBottom() {
+        const chatBox = document.getElementById('chat-box');
+        setTimeout(() => {
+            chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+        }, 50); // Небольшая задержка, чтобы анимация успела начаться
+    }
+
     function addMessage(text, sender, isHtml = false) {
         const chatBox = document.getElementById('chat-box');
+        const anchor = document.getElementById('chat-anchor');
         const msg = document.createElement('div');
         msg.className = `msg ${sender}`;
         
-        if (isHtml) {
-            msg.innerHTML = text; 
-        } else {
-            msg.textContent = text; 
-        }
+        if (isHtml) msg.innerHTML = text; 
+        else msg.textContent = text; 
         
-        chatBox.appendChild(msg); 
-        chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.insertBefore(msg, anchor); // Вставляем ДО невидимого якоря
+        scrollChatToBottom();
     }
 
     function showEvaTyping(delay, callback) {
@@ -466,8 +334,10 @@
         typing.style.display = 'block';
         
         const chatBox = document.getElementById('chat-box');
-        chatBox.appendChild(typing); 
-        chatBox.scrollTop = chatBox.scrollHeight;
+        const anchor = document.getElementById('chat-anchor');
+        chatBox.insertBefore(typing, anchor); 
+        
+        scrollChatToBottom();
         
         setTimeout(() => { 
             typing.style.display = 'none'; 
@@ -509,7 +379,7 @@
                         });
                     } else {
                         showEvaTyping(2500, () => {
-                            const btnHtml = "Спасибо за уточнение. Чтобы сформировать максимально точный предварительный диагноз, мне нужно сопоставить эти симптомы с вашей историей болезней.<br><br><button onclick='startAggregation()' style='background:var(--sber-green);color:white;border:none;padding:14px 15px;border-radius:14px;margin-top:12px;font-weight:700;width:100%;cursor:pointer;font-size:15px;'>Разрешить сбор данных</button>";
+                            const btnHtml = "Спасибо за уточнение. Чтобы сформировать максимально точный предварительный диагноз, мне нужно сопоставить эти симптомы с вашей историей болезней.<br><br><button onclick='startAggregation()' style='background:var(--sber-green);color:white;border:none;padding:12px 15px;border-radius:12px;margin-top:10px;font-weight:700;width:100%;cursor:pointer;font-size:14px;'>Разрешить сбор данных</button>";
                             addMessage(btnHtml, 'eva', true);
                             chatStep = 2; 
                             isTyping = false; 
