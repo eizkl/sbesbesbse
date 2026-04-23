@@ -314,10 +314,19 @@
         .res-card-full p { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin: 0; }
         
         .plan-section { margin-top: 12px; border-top: 1px solid #F5F5F5; padding-top: 12px; }
-        .plan-item { display: flex; gap: 12px; margin-bottom: 10px; }
-        .plan-emoji { font-size: 20px; flex-shrink: 0; }
-        .plan-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-        .plan-item p { font-size: 12px; color: var(--text-muted); margin: 0; }
+        .plan-item { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        
+        /* КРАСИВЫЕ ИКОНКИ ДЛЯ ПЛАНА ДЕЙСТВИЙ */
+        .plan-emoji { 
+            width: 44px; height: 44px; 
+            border-radius: 12px; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 22px; flex-shrink: 0; 
+        }
+
+        .plan-item-text { display: flex; flex-direction: column; justify-content: center; }
+        .plan-item-text h4 { font-size: 14px; font-weight: 700; margin: 0 0 2px 0; }
+        .plan-item-text p { font-size: 12px; color: var(--text-muted); margin: 0; }
 
         .btn-final { 
             width: 100%; padding: 16px; background: var(--sber-green); color: #fff; 
@@ -458,12 +467,18 @@
                 <p>Данные сопоставлены с вашей историей в ЕМИАС. Рекомендуется симптоматическое лечение.</p>
                 <div class="plan-section">
                     <div class="plan-item">
-                        <div class="plan-emoji">💊</div>
-                        <div><h4>Лекарства</h4><p>Жаропонижающие при температуре выше 38.5.</p></div>
+                        <div class="plan-emoji" style="background: #E8F0FE;">💊</div>
+                        <div class="plan-item-text">
+                            <h4>Лекарства</h4>
+                            <p>Жаропонижающие при температуре выше 38.5.</p>
+                        </div>
                     </div>
                     <div class="plan-item">
-                        <div class="plan-emoji">🩸</div>
-                        <div><h4>Анализы</h4><p>Рекомендуется сдать общий анализ крови (ОАК).</p></div>
+                        <div class="plan-emoji" style="background: #FCE8E8;">🩸</div>
+                        <div class="plan-item-text">
+                            <h4>Анализы</h4>
+                            <p>Рекомендуется сдать общий анализ крови (ОАК).</p>
+                        </div>
                     </div>
                 </div>
             </div>
