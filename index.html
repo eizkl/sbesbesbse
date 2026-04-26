@@ -71,7 +71,7 @@
         }
 
         /* ========================================= */
-        /* ГЛАВНЫЙ ЭКРАН               */
+        /* ГЛАВНЫЙ ЭКРАН                */
         /* ========================================= */
         #screen-home { 
             background: var(--sber-gradient-bg); 
@@ -269,7 +269,7 @@
         }
 
         /* ========================================= */
-        /* ЭКРАН ЗАГРУЗКИ               */
+        /* ЭКРАН ЗАГРУЗКИ                */
         /* ========================================= */
         #screen-process { background: #fff; z-index: 300; }
         .process-center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
@@ -388,7 +388,7 @@
             <div class="cards-grid">
                 <div class="health-card">
                     <div class="health-card-icon">🪪</div>
-                    <div><div class="health-card-title">Полис ОМС</div><div class="health-card-val">Активен</div></div>
+                    <div><div class="health-card-title">Полис ДМС</div><div class="health-card-val">Активен</div></div>
                 </div>
                 <div class="health-card">
                     <div class="health-card-icon" style="color: var(--sber-green);">🧪</div>
@@ -420,10 +420,10 @@
         <header class="chat-header">
             <div class="back-btn" onclick="goHome()">←</div>
             <div style="display: flex; align-items: center;">
-                <img src="eva-logo.png" alt="Ева" class="chat-header-avatar">
+                <img src="eva-logo.png" alt="Собеседник" class="chat-header-avatar" id="chat-avatar" style="transition: opacity 0.4s ease;">
                 <div>
-                    <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">Доктор Ева</div>
-                    <div style="font-size: 11px; color: var(--sber-green); font-weight: 700;">ИИ-ассистент СберЗдоровья</div>
+                    <div id="chat-name" style="font-weight: 800; font-size: 16px; color: var(--text-main); transition: opacity 0.4s ease;">Доктор Ева</div>
+                    <div id="chat-role" style="font-size: 11px; color: var(--sber-green); font-weight: 700; transition: opacity 0.4s ease;">ИИ-ассистент СберЗдоровья</div>
                 </div>
             </div>
         </header>
@@ -449,7 +449,9 @@
                 <div class="log-line" id="log1"><b>✓</b> ЕМИАС подключен</div>
                 <div class="log-line" id="log2"><b>✓</b> Медкарта проверена</div>
                 <div class="log-line" id="log3"><b>✓</b> Симптомы изучены</div>
-                <div class="log-line" id="log4"><b>●</b> Диагноз готов</div>
+                <div class="log-line" id="log4"><b>✓</b> Изучение риск-профиля</div>
+                <div class="log-line" id="log5"><b>✓</b> Оценка данных об окружающей среде</div>
+                <div class="log-line" id="log6"><b>●</b> Вероятный диагноз готов</div>
             </div>
         </div>
     </div>
@@ -457,7 +459,7 @@
     <div id="screen-result" class="screen">
         <header class="chat-header">
             <div class="back-btn" onclick="goHome()">✕</div>
-            <div style="font-weight: 800; font-size: 16px;">Заключение ИИ</div>
+            <div style="font-weight: 800; font-size: 16px;">Вероятный диагноз</div>
         </header>
         
         <div class="res-content">
@@ -465,6 +467,9 @@
                 <div class="status-tag">Высокая вероятность</div>
                 <h1>ОРВИ (Вирусная инфекция)</h1>
                 <p>Данные сопоставлены с вашей историей в ЕМИАС. Рекомендуется симптоматическое лечение.</p>
+                <p style="font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px;">
+                    *Данная оценка сформирована ИИ и не является окончательным диагнозом. ИИ не ставит окончательный диагноз, а только оценивает вероятность на основе данных.
+                </p>
                 <div class="plan-section">
                     <div class="plan-item">
                         <div class="plan-emoji" style="background: #E8F0FE;">💊</div>
@@ -523,11 +528,39 @@
         scrollChat();
     }
 
+    function switchDoctorProfile() {
+        const avatar = document.getElementById('chat-avatar');
+        const name = document.getElementById('chat-name');
+        const role = document.getElementById('chat-role');
+
+        avatar.style.opacity = 0;
+        name.style.opacity = 0;
+        role.style.opacity = 0;
+
+        setTimeout(() => {
+            avatar.src = "doctor-logo.png";
+            name.textContent = "Михаил";
+            role.textContent = "Лечащий врач";
+            
+            avatar.style.opacity = 1;
+            name.style.opacity = 1;
+            role.style.opacity = 1;
+        }, 400);
+    }
+
     function handleSend() {
         const input = document.getElementById('fake-input');
         if(isTyping || input.textContent !== "Сообщение...") return;
 
-        let text = chatStep === 0 ? "У меня температура 38 и слабость." : "Со вчерашнего вечера, кашля нет.";
+        let text = "";
+        if (chatStep === 0) {
+            text = "У меня температура 38 и слабость.";
+        } else if (chatStep === 1) {
+            text = "Со вчерашнего вечера, кашля нет.";
+        } else if (chatStep === 2) {
+            text = "Да, знобит сильно, и голова тяжелая. Еще чувствую сильную усталость, даже когда просто лежу.";
+        }
+        
         isTyping = true; input.textContent = ""; input.style.color = "#000";
 
         let i = 0;
@@ -543,8 +576,19 @@
                         if (chatStep === 0) {
                             addMsg("Поняла вас. Как давно это началось? Есть ли кашель или боль в горле?", 'eva');
                             chatStep = 1; isTyping = false;
-                        } else {
-                            addMsg("Спасибо. Чтобы поставить диагноз, мне нужно изучить вашу медкарту.<br><br><button onclick='startFinalAgg()' style='background:var(--sber-green);color:#fff;border:none;padding:12px;border-radius:14px;width:100%;font-weight:700;margin-top:10px;'>Разрешить сбор данных</button>", 'eva', true);
+                        } else if (chatStep === 1) {
+                            addMsg("Для детального разбора вашего состояния я подключаю к диалогу вашего лечащего врача.", 'eva');
+                            
+                            setTimeout(() => {
+                                switchDoctorProfile();
+                                
+                                setTimeout(() => {
+                                    addMsg("Здравствуйте, Анастасия! Я изучил ваши жалобы. Кроме температуры, есть ли выраженная ломота в мышцах или озноб? Опишите подробнее общее самочувствие.", 'eva');
+                                    chatStep = 2; isTyping = false;
+                                }, 1500);
+                            }, 1500);
+                        } else if (chatStep === 2) {
+                            addMsg("Благодарю за подробности. Картина проясняется. Чтобы я мог составить точный план лечения, мне необходимо сопоставить эти данные с вашей история болезни.<br><br><button onclick='startFinalAgg()' style='background:var(--sber-green);color:#fff;border:none;padding:12px;border-radius:14px;width:100%;font-weight:700;margin-top:10px;'>Разрешить сбор данных</button>", 'eva', true);
                             isTyping = false;
                         }
                     }, 1000);
@@ -562,11 +606,13 @@
         setTimeout(() => document.getElementById('log2').classList.add('show'), 1400);
         setTimeout(() => document.getElementById('log3').classList.add('show'), 2200);
         setTimeout(() => document.getElementById('log4').classList.add('show'), 3000);
+        setTimeout(() => document.getElementById('log5').classList.add('show'), 3800);
+        setTimeout(() => document.getElementById('log6').classList.add('show'), 4600);
 
         setTimeout(() => {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-result').classList.add('active');
-        }, 4200);
+        }, 5800);
     }
 </script>
 </body>
