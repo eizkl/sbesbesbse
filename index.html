@@ -328,4 +328,245 @@
 
         .plan-item-text { display: flex; flex-direction: column; justify-content: center; }
         .plan-item-text h4 { font-size: 14px; font-weight: 700; margin: 0 0 2px 0; }
-        .plan
+        .plan-item-text p { font-size: 12px; color: var(--text-muted); margin: 0; }
+
+        .btn-final { 
+            width: 100%; padding: 16px; background: var(--sber-green); color: #fff; 
+            border: none; border-radius: 16px; font-size: 15px; font-weight: 700; 
+            margin-bottom: 10px; 
+        }
+        .btn-final.alt { background: var(--sber-light-green); color: var(--sber-green); margin-bottom: 0; }
+
+        /* ========================================= */
+        /* НИЖНИЙ ТАББАР                */
+        /* ========================================= */
+        .bottom-navbar {
+            position: fixed; 
+            bottom: 0; left: 0; width: 100%; 
+            height: calc(60px + var(--safe-bottom)); 
+            background: #FFFFFF; 
+            border-top: 1px solid rgba(0,0,0,0.05); 
+            display: flex; justify-content: space-around; 
+            padding-bottom: var(--safe-bottom); 
+            z-index: 500;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 20%; color: var(--text-muted); gap: 4px; }
+        .nav-item.active { color: var(--sber-green); }
+        .nav-icon { font-size: 22px; }
+        .nav-label { font-size: 10px; font-weight: 700; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div id="screen-home" class="screen active" onclick="openChat()" style="cursor: pointer; overflow-y: auto; padding: 0;">
+        <img src="home-bg.png" alt="Главная" style="width: 100%; display: block;">
+        
+        <nav class="bottom-navbar" id="main-nav" style="display: none;"></nav>
+    </div>
+
+    <div id="screen-chat" class="screen">
+        <header class="chat-header">
+            <div class="back-btn" onclick="goHome()">←</div>
+            <div style="display: flex; align-items: center;">
+                <img src="eva-logo.png" alt="Собеседник" class="chat-header-avatar" id="chat-avatar" style="transition: opacity 0.4s ease;">
+                <div>
+                    <div id="chat-name" style="font-weight: 800; font-size: 16px; color: var(--text-main); transition: opacity 0.4s ease;">Доктор Ева</div>
+                    <div id="chat-role" style="font-size: 11px; color: var(--sber-green); font-weight: 700; transition: opacity 0.4s ease;">ИИ-ассистент СберЗдоровья</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="chat-scroll" id="chat-box">
+            <div class="bubble eva">Здравствуйте, Анастасия! Я ваш медицинский ИИ-ассистент. Опишите, что вас беспокоит?</div>
+            <div id="chat-anchor"></div>
+        </div>
+
+        <div class="chat-input-bar">
+            <div class="fake-input-field" id="fake-input">Сообщение...</div>
+            <div class="send-btn-icon" onclick="handleSend()">↑</div>
+        </div>
+    </div>
+
+    <div id="screen-process" class="screen">
+        <div class="process-center">
+            <div class="spinner-outer">
+                <img src="eva-logo.png" alt="Ева" class="spinner-avatar">
+            </div>
+            <h2 style="margin-top: 25px; font-weight: 800; font-size: 17px; text-align: center; padding: 0 20px; line-height: 1.4;">Ева анализирует вашу медкарту и данные из авторитетных источников</h2>
+            <div class="log-box">
+                <div class="log-line" id="log1"><b>✓</b> ЕМИАС подключен</div>
+                <div class="log-line" id="log2"><b>✓</b> Медкарта проверена</div>
+                <div class="log-line" id="log3"><b>✓</b> Симптомы изучены</div>
+                <div class="log-line" id="log4"><b>✓</b> Изучение риск-профиля</div>
+                <div class="log-line" id="log5"><b>✓</b> Оценка данных об окружающей среде</div>
+                <div class="log-line" id="log6"><b>●</b> Вероятный диагноз готов</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <header class="chat-header">
+            <div class="back-btn" onclick="goHome()">✕</div>
+            <div style="font-weight: 800; font-size: 16px;">Вероятный диагноз</div>
+        </header>
+        
+        <div class="res-content">
+            <div class="res-card-full">
+                <div class="status-tag">Высокая вероятность</div>
+                <h1>ОРВИ (Вирусная инфекция)</h1>
+                <p>Данные сопоставлены с вашей историей в ЕМИАС. Рекомендуется симптоматическое лечение.</p>
+                <p style="font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px;">
+                    *Данная оценка сформирована ИИ и не является окончательным диагнозом. ИИ не ставит окончательный диагноз, а только оценивает вероятность на основе данных.
+                </p>
+                <div class="plan-section">
+                    <div class="plan-item">
+                        <div class="plan-emoji" style="background: #E8F0FE;">💊</div>
+                        <div class="plan-item-text">
+                            <h4>Лекарства</h4>
+                            <p>Жаропонижающие при температуре выше 38.5.</p>
+                        </div>
+                    </div>
+                    <div class="plan-item">
+                        <div class="plan-emoji" style="background: #FCE8E8;">🩸</div>
+                        <div class="plan-item-text">
+                            <h4>Анализы</h4>
+                            <p>Рекомендуется сдать общий анализ крови (ОАК).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-final" onclick="alert('ЕАптека')">Заказать в ЕАПТЕКЕ</button>
+            <button class="btn-final alt" onclick="alert('Запись на ОАК')">Записаться на анализы (ОАК)</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- НАВИГАЦИЯ ---
+    function openChat() {
+        document.getElementById('screen-home').classList.add('previous');
+        document.getElementById('screen-chat').classList.add('active');
+        if(document.getElementById('main-nav')) {
+            document.getElementById('main-nav').style.display = 'none'; // Скрываем таббар
+        }
+    }
+
+    function goHome() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'previous'));
+        document.getElementById('screen-home').classList.add('active');
+        // Таббар нам на главной больше не нужен (там картинка), поэтому не возвращаем его
+    }
+
+    // --- ЛОГИКА ЧАТА ---
+    let chatStep = 0;
+    let isTyping = false;
+
+    function scrollChat() {
+        const box = document.getElementById('chat-box');
+        setTimeout(() => { box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' }); }, 100);
+    }
+
+    function addMsg(text, type, isHtml = false) {
+        const box = document.getElementById('chat-box');
+        const anchor = document.getElementById('chat-anchor');
+        const msg = document.createElement('div');
+        msg.className = `bubble ${type}`;
+        if(isHtml) msg.innerHTML = text; else msg.textContent = text;
+        box.insertBefore(msg, anchor);
+        scrollChat();
+    }
+
+    function switchDoctorProfile() {
+        const avatar = document.getElementById('chat-avatar');
+        const name = document.getElementById('chat-name');
+        const role = document.getElementById('chat-role');
+
+        avatar.style.opacity = 0;
+        name.style.opacity = 0;
+        role.style.opacity = 0;
+
+        setTimeout(() => {
+            avatar.src = "doctor-logo.png";
+            name.textContent = "Михаил";
+            role.textContent = "Лечащий врач";
+            
+            avatar.style.opacity = 1;
+            name.style.opacity = 1;
+            role.style.opacity = 1;
+        }, 400);
+    }
+
+    function handleSend() {
+        const input = document.getElementById('fake-input');
+        if(isTyping || input.textContent !== "Сообщение...") return;
+
+        let text = "";
+        if (chatStep === 0) {
+            text = "У меня температура 38 и слабость.";
+        } else if (chatStep === 1) {
+            text = "Со вчерашнего вечера, кашля нет.";
+        } else if (chatStep === 2) {
+            text = "Да, знобит сильно, и голова тяжелая. Еще чувствую сильную усталость, даже когда просто лежу.";
+        }
+        
+        isTyping = true; input.textContent = ""; input.style.color = "#000";
+
+        let i = 0;
+        const typeWriter = setInterval(() => {
+            input.textContent += text.charAt(i); i++;
+            if (i >= text.length) {
+                clearInterval(typeWriter);
+                setTimeout(() => {
+                    addMsg(text, 'user');
+                    input.textContent = "Сообщение..."; input.style.color = "var(--text-muted)";
+                    
+                    setTimeout(() => {
+                        if (chatStep === 0) {
+                            addMsg("Поняла вас. Как давно это началось? Есть ли кашель или боль в горле?", 'eva');
+                            chatStep = 1; isTyping = false;
+                        } else if (chatStep === 1) {
+                            addMsg("Для детального разбора вашего состояния я подключаю к диалогу вашего лечащего врача.", 'eva');
+                            
+                            setTimeout(() => {
+                                switchDoctorProfile();
+                                
+                                setTimeout(() => {
+                                    addMsg("Здравствуйте, Анастасия! Я изучил ваши жалобы. Кроме температуры, есть ли выраженная ломота в мышцах или озноб? Опишите подробнее общее самочувствие.", 'eva');
+                                    chatStep = 2; isTyping = false;
+                                }, 1500);
+                            }, 1500);
+                        } else if (chatStep === 2) {
+                            addMsg("Благодарю за подробности. Картина проясняется. Чтобы я мог составить точный план лечения, мне необходимо сопоставить эти данные с вашей история болезни.<br><br><button onclick='startFinalAgg()' style='background:var(--sber-green);color:#fff;border:none;padding:12px;border-radius:14px;width:100%;font-weight:700;margin-top:10px;'>Разрешить сбор данных</button>", 'eva', true);
+                            isTyping = false;
+                        }
+                    }, 1000);
+                }, 400);
+            }
+        }, 40);
+    }
+
+    // --- ЛОГИКА АНИМАЦИИ ---
+    function startFinalAgg() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-process').classList.add('active');
+        
+        setTimeout(() => document.getElementById('log1').classList.add('show'), 600);
+        setTimeout(() => document.getElementById('log2').classList.add('show'), 1400);
+        setTimeout(() => document.getElementById('log3').classList.add('show'), 2200);
+        setTimeout(() => document.getElementById('log4').classList.add('show'), 3000);
+        setTimeout(() => document.getElementById('log5').classList.add('show'), 3800);
+        setTimeout(() => document.getElementById('log6').classList.add('show'), 4600);
+
+        setTimeout(() => {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-result').classList.add('active');
+        }, 5800);
+    }
+</script>
+</body>
+</html>
