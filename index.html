@@ -301,6 +301,7 @@
         #screen-result { 
             background: var(--bg-main); 
             overflow-y: auto; 
+            cursor: pointer; /* Показываем, что экран кликабельный */
         }
         
         .res-content { 
@@ -363,7 +364,7 @@
 <div class="app-container">
 
     <div id="screen-home" class="screen active" onclick="openChat()" style="cursor: pointer; overflow-y: auto;">
-        <img src="home-bg.png" alt="Главная" style="width: 100%; display: block;">
+        <img id="home-image" src="home-start.png" alt="Главная" style="width: 100%; display: block;">
         
         <nav class="bottom-navbar" id="main-nav" style="display: none;"></nav>
     </div>
@@ -408,9 +409,9 @@
         </div>
     </div>
 
-    <div id="screen-result" class="screen">
+    <div id="screen-result" class="screen" onclick="returnToNewHome()">
         <header class="chat-header">
-            <div class="back-btn" onclick="goHome()">✕</div>
+            <div class="back-btn">✕</div>
             <div style="font-weight: 800; font-size: 16px;">Вероятный диагноз</div>
         </header>
         
@@ -440,8 +441,8 @@
                 </div>
             </div>
             
-            <button class="btn-final" onclick="alert('ЕАптека')">Заказать в ЕАПТЕКЕ</button>
-            <button class="btn-final alt" onclick="alert('Запись на ОАК')">Записаться на анализы (ОАК)</button>
+            <button class="btn-final">Заказать в ЕАПТЕКЕ</button>
+            <button class="btn-final alt">Записаться на анализы (ОАК)</button>
         </div>
     </div>
 
@@ -452,15 +453,21 @@
     function openChat() {
         document.getElementById('screen-home').classList.add('previous');
         document.getElementById('screen-chat').classList.add('active');
-        if(document.getElementById('main-nav')) {
-            document.getElementById('main-nav').style.display = 'none'; // Скрываем таббар
-        }
     }
 
     function goHome() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'previous'));
         document.getElementById('screen-home').classList.add('active');
-        // Таббар нам на главной больше не нужен (там картинка), поэтому не возвращаем его
+    }
+
+    // --- НОВАЯ ФУНКЦИЯ ДЛЯ ФИНАЛЬНОГО ПЕРЕХОДА С ПОДМЕНОЙ КАРТИНКИ ---
+    function returnToNewHome() {
+        // Меняем картинку на ту, что с курьером
+        document.getElementById('home-image').src = 'home-end.png';
+        
+        // Переключаем экраны обратно на главную
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'previous'));
+        document.getElementById('screen-home').classList.add('active');
     }
 
     // --- ЛОГИКА ЧАТА ---
