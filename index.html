@@ -259,13 +259,19 @@
             background: #FFFFFF; border-top: 1px solid rgba(0,0,0,0.05); 
             display: flex; align-items: center; gap: 12px; z-index: 600; 
         }
+        
+        /* ИСПРАВЛЕНИЕ ТУТ: ДОБАВЛЕНЫ OVERFLOW И WHITE-SPACE */
         .fake-input-field { 
             flex-grow: 1; background: #F4F6F8; height: 42px; border-radius: 21px; 
             padding: 0 16px; display: flex; align-items: center; color: var(--text-muted); font-size: 14px; 
+            overflow: hidden; white-space: nowrap; 
         }
+        
+        /* ИСПРАВЛЕНИЕ ТУТ: ДОБАВЛЕН FLEX-SHRINK */
         .send-btn-icon { 
             width: 38px; height: 38px; background: var(--sber-green); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; 
+            flex-shrink: 0; 
         }
 
         /* ========================================= */
