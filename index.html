@@ -399,12 +399,11 @@
             </div>
             <h2 style="margin-top: 25px; font-weight: 800; font-size: 17px; text-align: center; padding: 0 20px; line-height: 1.4;">Ева анализирует вашу медкарту и данные из авторитетных источников</h2>
             <div class="log-box">
-                <div class="log-line" id="log1"><b>✓</b> ЕМИАС подключен</div>
-                <div class="log-line" id="log2"><b>✓</b> Медкарта проверена</div>
-                <div class="log-line" id="log3"><b>✓</b> Симптомы изучены</div>
-                <div class="log-line" id="log4"><b>✓</b> Изучение риск-профиля</div>
-                <div class="log-line" id="log5"><b>✓</b> Оценка данных об окружающей среде</div>
-                <div class="log-line" id="log6"><b>●</b> Вероятный диагноз готов</div>
+                <div class="log-line" id="log1"><b>✓</b> Медкарта проверена</div>
+                <div class="log-line" id="log2"><b>✓</b> Симптомы изучены</div>
+                <div class="log-line" id="log3"><b>✓</b> Изучение риск-профиля</div>
+                <div class="log-line" id="log4"><b>✓</b> Оценка данных об окружающей среде</div>
+                <div class="log-line" id="log5"><b>●</b> Вероятный диагноз готов</div>
             </div>
         </div>
     </div>
@@ -568,12 +567,11 @@
         setTimeout(() => document.getElementById('log3').classList.add('show'), 2200);
         setTimeout(() => document.getElementById('log4').classList.add('show'), 3000);
         setTimeout(() => document.getElementById('log5').classList.add('show'), 3800);
-        setTimeout(() => document.getElementById('log6').classList.add('show'), 4600);
 
         setTimeout(() => {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-result').classList.add('active');
-        }, 5800);
+        }, 5000);
     }
 </script>
 </body>
