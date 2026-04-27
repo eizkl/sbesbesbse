@@ -364,7 +364,9 @@
 <div class="app-container">
 
     <div id="screen-home" class="screen active" onclick="openChat()" style="cursor: pointer; overflow-y: auto;">
-        <img id="home-image" src="home-start.png" alt="Главная" style="width: 100%; display: block;">
+        <img id="home-image-start" src="home-start.png" alt="Главная (Без курьера)" style="width: 100%; display: block;">
+        
+        <img id="home-image-end" src="home-end.png" alt="Главная (С курьером)" style="width: 100%; display: none;">
         
         <nav class="bottom-navbar" id="main-nav" style="display: none;"></nav>
     </div>
@@ -459,10 +461,11 @@
         document.getElementById('screen-home').classList.add('active');
     }
 
-    // --- НОВАЯ ФУНКЦИЯ ДЛЯ ФИНАЛЬНОГО ПЕРЕХОДА С ПОДМЕНОЙ КАРТИНКИ ---
+    // --- НОВАЯ ФУНКЦИЯ ДЛЯ ФИНАЛЬНОГО ПЕРЕХОДА (МГНОВЕННО) ---
     function returnToNewHome() {
-        // Меняем картинку на ту, что с курьером
-        document.getElementById('home-image').src = 'home-end.png';
+        // Мгновенно скрываем первую картинку и показываем вторую (которая уже подгружена в фоне)
+        document.getElementById('home-image-start').style.display = 'none';
+        document.getElementById('home-image-end').style.display = 'block';
         
         // Переключаем экраны обратно на главную
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'previous'));
